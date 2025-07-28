@@ -6,6 +6,10 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:  # 允许手动触发
+  schedule:
+    - cron: '20 6 * * *'  # 每天6:20运行（UTC时间）
+    branches: [ "main" ]
 
 # 工作流任务
 jobs:
