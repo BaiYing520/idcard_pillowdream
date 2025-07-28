@@ -1,6 +1,6 @@
 name: Python Build
 
-# 触发条件：推送到main分支或创建PR时
+# 触发条件：推送到main分支、创建PR、手动触发和每日定时构建
 on:
   push:
     branches: [ "main" ]
@@ -13,7 +13,7 @@ on:
 # 工作流任务
 jobs:
   build:
-    # 在不同操作系统上运行（可选）
+    # 在不同操作系统上运行
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -37,29 +37,35 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt  # 安装项目依赖
-        pip install pyinstaller  # 安装打包工具（如果需要）
+        pip install pyinstaller  # 安装打包工具
         pip install numpy
         pip install pillow
         pip install opencv-python
         pip install opencv-contrib-python
         
-    # 步骤4：运行测试（如果有测试）
+    # 步骤4：运行测试（如需启用可取消注释）
     #- name: Run tests
       #run: |
-        # 示例：运行pytest
         #pip install pytest
         #pytest tests/ --cov=./ --cov-report=xml
 
     # 步骤5：构建项目（使用pyinstaller）
-    - name: Build with pyinstaller
+    - name: Build with pyinstaller for windows
       run: |
-        # 根据你的主程序文件调整
+        # 根据主程序文件调整的打包命令
         pyinstaller -i asserts/ico.ico --windowed --clean --noconfirm --onefile --add-data "asserts;asserts" main.py
-      if: matrix.os == 'windows-latest'  # 可选：只在特定系统上构建
+      if: matrix.os == 'windows-latest'  # 只在Windows上构建
+      
+    - name: Build with pyinstaller for macos
+      run: |
+        # 根据主程序文件调整的打包命令
+        pyinstaller -i asserts/ico.icns --windowed --clean --noconfirm --onefile --add-data ./asserts:./asserts --paths /Users/chao/PycharmProjects/idcard_generator/venv/lib/python3.7/site-packages main.py
+      if: matrix.os == 'windows-latest'  # 只在Macos上构建
 
-    # 步骤6：上传构建产物
+    # 步骤6：上传构建产物（已升级到v4版本）
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4  # 已更新为最新版本v4
       with:
         name: dist-${{ matrix.os }}
         path: dist/  # pyinstaller的输出目录
+    
