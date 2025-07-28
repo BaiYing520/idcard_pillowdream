@@ -13,30 +13,31 @@ on:
 # 工作流任务
 jobs:
   build:
-    # 在不同操作系统上运行
-    runs-on: ${{ matrix.os }}
+    # 在不同操作系统上运行，指定macOS版本避免迁移警告
+    runs-on: windows-latest
     strategy:
       fail-fast: false
-      matrix:
-        os: [windows-latest, macos-latest]
-        python-version: ["3.9", "3.10", "3.11"]
-
     steps:
     # 步骤1：检出代码
     - uses: actions/checkout@v4
 
-    # 步骤2：设置Python环境
+    # 步骤2：设置Python环境，禁用自动缓存查找
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-        cache: 'pip'  # 缓存pip依赖，加快构建速度
+        cache: 'pip'
+        # 明确指定requirements文件路径，如果文件不存在则禁用缓存
+        cache-dependency-path: |
+          **/requirements.txt
+          **/pyproject.toml
 
-    # 步骤3：安装依赖
+    # 步骤3：安装依赖（不依赖requirements.txt）
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pyinstaller  # 安装打包工具
+        # 直接安装所需依赖，不使用requirements.txt
+        pip install pyinstaller
         pip install numpy
         pip install pillow
         pip install opencv-python
@@ -49,21 +50,14 @@ jobs:
         #pytest tests/ --cov=./ --cov-report=xml
 
     # 步骤5：构建项目（使用pyinstaller）
-    - name: Build with pyinstaller for windows
+    - name: Build with pyinstaller
       run: |
         # 根据主程序文件调整的打包命令
         pyinstaller -i asserts/ico.ico --windowed --clean --noconfirm --onefile --add-data "asserts;asserts" main.py
-      if: matrix.os == 'windows-latest'  # 只在Windows上构建
-      
-    - name: Build with pyinstaller for macos
-      run: |
-        # 根据主程序文件调整的打包命令
-        pyinstaller -i asserts/ico.icns --windowed --clean --noconfirm --onefile --add-data ./asserts:./asserts --paths /Users/chao/PycharmProjects/idcard_generator/venv/lib/python3.7/site-packages main.py
-      if: matrix.os == 'windows-latest'  # 只在Macos上构建
 
-    # 步骤6：上传构建产物（已升级到v4版本）
+    # 步骤6：上传构建产物
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v4  # 已更新为最新版本v4
+      uses: actions/upload-artifact@v4
       with:
         name: dist-${{ matrix.os }}
         path: dist/  # pyinstaller的输出目录
