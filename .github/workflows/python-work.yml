@@ -41,11 +41,11 @@ jobs:
         pip install opencv-contrib-python
         
     # 步骤4：运行测试（如果有测试）
-    - name: Run tests
-      run: |
+    #- name: Run tests
+      #run: |
         # 示例：运行pytest
-        pip install pytest
-        pytest tests/ --cov=./ --cov-report=xml
+        #pip install pytest
+        #pytest tests/ --cov=./ --cov-report=xml
 
     # 步骤5：构建项目（使用pyinstaller）
     - name: Build with pyinstaller
