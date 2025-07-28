@@ -1,13 +1,13 @@
 from setuptools import setup
 
-setup(name='idcard_generator',
-      version='22',
-      description='idcard_generator',
-      author='airobot',
-      author_email='airobot@airobot.link',
+setup(name='idcard_pillowdream',
+      version='1',
+      description='idcard_pillowdream',
+      author='PillowDreamManagementGroup',
+      author_email='op@pillowdream.cn',
       license='GPL-3.0',
-      packages=['idcard_generator'],
-      # data_files=['idcard_generator/asserts/empty.png', 'idcard_generator/asserts/fzhei.ttf', 'idcard_generator/asserts/hei.ttf', 'idcard_generator/asserts/ico.icns', 'idcard_generator/asserts/ocrb10bt.ttf'],
+      packages=['idcard_pillowdream'],
+      # data_files=['idcard_pillowdream/asserts/empty.png', 'idcard_pillowdream/asserts/fzhei.ttf', 'idcard_pillowdream/asserts/hei.ttf', 'idcard_pillowdream/asserts/ico.icns', 'idcard_pillowdream/asserts/ocrb10bt.ttf'],
       include_package_data=True,
-      install_requires=['numpy==1.20.3', 'pillow==8.3.1', 'opencv-python==4.5.2.54']
+      install_requires=['numpy==2.2.6', 'pillow==11.3.0', 'opencv-python==4.12.0.88']
       )
