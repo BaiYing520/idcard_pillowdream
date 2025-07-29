@@ -66,7 +66,7 @@ class IDGen:
         random_name = name_utils.random_name()
         set_entry_value(self.eName, random_name["name_full"])
         set_entry_value(self.eSex, '女' if random_name['sex'] == 0 else "男")
-        set_entry_value(self.eNation, "汉")
+        set_entry_value(self.eNation, "玩家")
         year = random.randint(1900, 2020)
         set_entry_value(self.eYear, year)
         month = random.randint(1, 12)
@@ -192,7 +192,7 @@ class IDGen:
 
         random_btn = Button(root, text='随机', width=8, command=self.random_data)
         random_btn.grid(row=8, column=0, sticky=tkinter.W, padx=16, pady=3, columnspan=2)
-        generator_btn = Button(root, text='选择头像并生成', width=24, command=self.generator_image)
+        generator_btn = Button(root, text='选择玩家皮肤照并生成', width=24, command=self.generator_image)
         generator_btn.grid(row=8, column=2, sticky=tkinter.W, padx=1, pady=3, columnspan=4)
 
         # 触发随机生成
